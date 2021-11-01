@@ -10,6 +10,7 @@
     "body-parser": "^1.19.0",
     "concurrently": "^6.3.0",
     "cypress": "^8.7.0",
+    "debug": "^4.3.2",
     "express": "^4.17.1",
     "mongoose": "^6.0.10",
     "react": "^17.0.2",
@@ -20,7 +21,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "concurrently \"nodemon ./src/server/server.js\" \"react-scripts start\"",
+    "start": "concurrently \"DEBUG=http:server nodemon ./src/server/server.js -q\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,8 +46,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.14"
-  }, 
+  },
   "nodemonConfig": {
-    "verbose" : false
+    "verbose": false
   }
 }
