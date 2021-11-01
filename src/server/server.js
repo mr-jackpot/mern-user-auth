@@ -11,10 +11,6 @@ log('Starting: ', name);
 
 app.get("/", (req, res) => res.send("Boom, you've hit the express server"));
 
-// app.listen(port, () => console.log(
-//   `[server.js] Server listening on port ${port}.`
-// ));
-
 app.listen(port, () => {
-    log(`[server.js] Server listening on port ${port}.`);
+    log(`${name} listening on port ${port}.`);
 })
