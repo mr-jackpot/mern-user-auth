@@ -45,5 +45,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.14"
+  }, 
+  "nodemonConfig": {
+    "verbose" : false
   }
 }
