@@ -5,6 +5,7 @@ Objectives
 	- Configure sessions
 	- Decide on either Auth0 or Passport 
 - [ ] Unit testing w/ Cypress
+	- [ ] Cypress tests included in CI/CD Pipeline
 - [ ] GCP deployment?
     - Some kind of automation?
 
