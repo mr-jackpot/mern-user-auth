@@ -17,3 +17,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     log(serverLog(`starting ${name} on port ${port}.`));
 })
+
