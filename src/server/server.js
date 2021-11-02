@@ -9,8 +9,11 @@ const http = require('http');
 const name = '[server.js]';
 const serverLog = chalk.redBright.bold
 
-app.get("/", (req, res) => res.send("Boom, you've hit the express server"));
+app.get("/", (req, res) => {
+    res.send("Boom, you've hit the express server")
+    log(serverLog(`${name} returned a response @ '/'`))
+});
 
 app.listen(port, () => {
-    log(serverLog(`Starting: ${name} listening on port ${port}.`));
+    log(serverLog(`starting ${name} on port ${port}.`));
 })
