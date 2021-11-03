@@ -6,16 +6,16 @@ var hashReturn;
 
 const encrypt = (password) => {
 
-    bcrypt.genSalt(saltRounds, function (saltError, salt) {
+    bcrypt.genSalt(saltRounds, (saltError, salt) => {
         if (saltError) {
           throw saltError
         } else {
-          bcrypt.hash(password, salt, function(hashError, hash) {
+          bcrypt.hash(password, salt, (hashError, hash) => {
             if (hashError) {
                 throw hashError
             } else {
                 //return hash;
-                console.log(hash)
+                console.log(hash);
             }
           })
         }
