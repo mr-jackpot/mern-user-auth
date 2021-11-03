@@ -8,8 +8,10 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.23.0",
     "body-parser": "^1.19.0",
+    "chalk": "^4.1.2",
     "concurrently": "^6.3.0",
     "cypress": "^8.7.0",
+    "debug": "^4.3.2",
     "express": "^4.17.1",
     "mongoose": "^6.0.10",
     "nodemon": "^2.0.14",
@@ -21,7 +23,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"DEBUG=http:server nodemon ./src/server/server.js -q\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,5 +45,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  },
+  "nodemonConfig": {
+    "verbose": false
   }
 }

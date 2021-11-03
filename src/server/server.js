@@ -1,9 +1,20 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 4000;
 
-app.get("/", (req, res) => res.send("Good monring sunshine!"));
+const chalk = require('chalk')
+const debug = require('debug');
+const log = debug('http:server');
+const http = require('http');
+const name = '[server.js]';
+const serverLog = chalk.redBright.bold
 
-app.listen(port, () => console.log(
-  `Example app listening on port ${port}!`
-));
+app.get("/", (req, res) => {
+    res.send("Boom, you've hit the express server")
+    log(serverLog(`${name} returned a response @ '/'`))
+});
+
+app.listen(port, () => {
+    log(serverLog(`starting ${name} on port ${port}.`));
+})
+
