@@ -1,4 +1,5 @@
 import {React, useState } from 'react'
+import axios from 'axios';
 
 const Login = () => {
     
@@ -6,11 +7,21 @@ const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    const login = {
+        "username": username,
+        "password": password 
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(`Username: ${username}`)
-        console.log(`Password: ${password}`)
-        // to api
+        console.log(login);
+        submitLogin(login);
+    }
+
+    const submitLogin = (auth) => {
+        axios
+            .post('http://localhost:4000/auth', auth)
+            .then((res) => console.log(res))
     }
     
     return (
