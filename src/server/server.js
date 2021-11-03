@@ -32,7 +32,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-    console.log(encryptPassword.encrypt('pass'));
+    // Encrypt the password from the request (POC atm and broken)
+    log(serverLog(encryptPassword.encrypt('pass')));
     res.json();
     log(serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`))
 })
