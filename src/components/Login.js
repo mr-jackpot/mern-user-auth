@@ -2,6 +2,7 @@ import {React, useState } from 'react'
 
 const Login = () => {
     
+    // This can be one object
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
