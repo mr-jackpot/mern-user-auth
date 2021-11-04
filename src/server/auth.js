@@ -1,9 +1,18 @@
+// const express = require('express')
+// const app = express()
+// const bodyParser = require('body-parser')
 // var passport = require('passport');
 // var LocalStrategy = require('passport-local').Strategy;
 
-const hello = (data) => {return console.log(data)}
+const hello = (req) => {
+    
+    return console.log(req)
+
+    // return console.log(req.body)
+}
 
 module.exports = {hello}
+
 
 // // passport.serializeUser(function(user, done) { //In serialize user you decide what to store in the session. Here I'm storing the user id only.
 // //   done(null, user.id);

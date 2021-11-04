@@ -25,6 +25,13 @@ app.use(function (req, res, next) {
   
     next();
   });
+app.use(
+    express.urlencoded({
+      extended: true
+    })
+  )
+  
+app.use(express.json())
 
 app.get("/", (req, res) => {
     res.send("Boom, you've hit the express server")
@@ -32,9 +39,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-    // passp.hello('test');
-    // passp.hello(req);
-    console.log(req)
+    passp.hello(req.body);
     res.json();
     log(serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`))
 })
