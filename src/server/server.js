@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 4000;
+const passp = require('./auth')
 
 const chalk = require('chalk')
 const debug = require('debug');
@@ -31,6 +32,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
+    // passp.hello('test');
+    // passp.hello(req);
+    console.log(req)
     res.json();
     log(serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`))
 })
