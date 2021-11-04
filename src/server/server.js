@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const port = 4000;
 
-const encryptPassword = require('./encryptPassword')
 const chalk = require('chalk')
 const debug = require('debug');
 const log = debug('http:server');
@@ -32,8 +31,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-    // Encrypt the password from the request (POC atm and broken)
-    log(serverLog(encryptPassword.encrypt('pass')));
     res.json();
     log(serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`))
 })
