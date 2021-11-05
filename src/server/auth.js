@@ -1,14 +1,21 @@
-// const express = require('express')
-// const app = express()
-// const bodyParser = require('body-parser')
-// var passport = require('passport');
-// var LocalStrategy = require('passport-local').Strategy;
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 const hello = (req) => {
     
-    return console.log(req)
+    passport.use(new LocalStrategy(
+        (username, password, done) => {
+          User.findOne({ username: username }, (err, user) => {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (!user.verifyPassword(password)) { return done(null, false); }
+            return done(null, user);
+          });
+        }
+      ));
 
-    // return console.log(req.body)
+      return console.log(req)
+
 }
 
 module.exports = {hello}
@@ -39,17 +46,6 @@ module.exports = {hello}
 // //         });
 // //     });
 // // }));
-
-// passport.use(new LocalStrategy(
-//     function(username, password, done) {
-//       User.findOne({ username: username }, function (err, user) {
-//         if (err) { return done(err); }
-//         if (!user) { return done(null, false); }
-//         if (!user.verifyPassword(password)) { return done(null, false); }
-//         return done(null, user);
-//       });
-//     }
-//   ));
 
 
 // // app.use(session({ secret: 'super secret' })); //to make passport remember the user on other pages too.(Read about session store. I used express-sessions.)
