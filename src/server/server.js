@@ -4,6 +4,7 @@ const port = 4000;
 const authenticate = require("./auth");
 const config = require("./config.js");
 
+const User = require("../models/users");
 const mongoose = require("mongoose");
 const chalk = require("chalk");
 const debug = require("debug");
@@ -16,7 +17,13 @@ const db = `mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.m
 
 mongoose
   .connect(db, { useNewUrlParser: true })
-  .then(() => log(serverLog(`${name} Mongo connected @ ${db}`)))
+  .then(() =>
+    log(
+      serverLog(
+        `${name} Mongo connected @ ${config.mongoCluster}/${config.mongoDatabase}`
+      )
+    )
+  )
   .catch((err) => log(serverLog(err)));
 
 app.use(function (req, res, next) {
@@ -48,7 +55,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  authenticate.verifyUser(req.data.username, req.data.password);
+  authenticate.verifyUser(req.body.username, req.body.password);
   res.json();
   log(
     serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`)

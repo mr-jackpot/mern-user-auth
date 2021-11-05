@@ -1,25 +1,39 @@
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+const User = require("../models/users");
+var u = "";
+var p = "";
 
-const verifyUser = (u, p) => {
-  passport.use(
-    new LocalStrategy((u, p, done) => {
-      User.findOne({ username: u }, (err, u) => {
-        if (err) {
-          return done(err);
-        }
-        if (!u) {
-          return done(null, false);
-        }
-        if (!u.verifyPassword(p)) {
-          return done(null, false);
-        }
-        return done(null, user);
-      });
-    })
-  );
-  return console.log(req);
+const verifyUser = (user, pass) => {
+  u = user;
+  p = pass;
+  passport.authenticate("local", {
+    successRedirect: "/succ",
+    failureRedirect: "/fail",
+    failureFlash: true,
+  });
 };
+
+passport.use(
+  new LocalStrategy((u, p, done) => {
+    User.findOne({ username: u }, (err, u) => {
+      if (err) {
+        return done(err, console.log("rip error"));
+      }
+      if (!u) {
+        return done(null, false, console.log("incorrect username"));
+      }
+      if (!u.verifyPassword(p)) {
+        return done(
+          null,
+          false,
+          console.log("incorrect password, correct username")
+        );
+      }
+      return done(null, user, console.log("success"));
+    });
+  })
+);
 
 module.exports = { verifyUser };
 
