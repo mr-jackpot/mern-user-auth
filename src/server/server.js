@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  authenticate.verifyUser();
+  authenticate.verifyUser(req.data.username, req.data.password);
   res.json();
   log(
     serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`)
