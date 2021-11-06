@@ -4,6 +4,7 @@ const port = 4000;
 const authenticate = require("./auth");
 const config = require("./config.js");
 
+const passport = require('passport');
 const User = require("../models/users");
 const mongoose = require("mongoose");
 const chalk = require("chalk");
@@ -65,3 +66,6 @@ app.post("/auth", (req, res) => {
 app.listen(port, () => {
   log(serverLog(`${name} running on port ${port}.`));
 });
+
+app.use(passport.initialize());
+app.use(passport.session());
