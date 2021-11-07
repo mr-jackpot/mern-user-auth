@@ -3,13 +3,24 @@ var LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/users");
 
 const verifyUser = (user, pass) => {
+  const userPromise = new Promise((resolve, reject) => {
   User.findOne({username: user, password: pass})
   .then(dbProduct => {
     if (dbProduct === null)
-      return 0;
-    if (dbProduct.length > 0)
-      return 1;
-  })
+      reject(0)
+    if (dbProduct !== null)
+      resolve(1);
+  })})
+
+  const onResolved = (resolvedValue) => console.log(resolvedValue);
+  const onRejected = (error) => console.log(error);
+
+  try {
+    return userPromise.then(onResolved, onRejected) 
+  }
+  finally {
+    console.log('ree')
+  }
      
   // passport.authenticate("local", {
   //   successRedirect: "/succ",

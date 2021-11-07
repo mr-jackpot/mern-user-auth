@@ -59,7 +59,6 @@ app.get("/", (req, res) => {
 
 app.post("/auth", (req, res) => {
   var isAuthenticated = authenticate.verifyUser(req.body.username, req.body.password);
-  console.log(isAuthenticated)
   if (isAuthenticated === 1) {
     log(authSuccess(`${name} User ${req.body.username} is authenticated successfully.`));
   } else {
