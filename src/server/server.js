@@ -13,6 +13,8 @@ const log = debug("http:server");
 const http = require("http");
 const name = "[server.js]";
 const serverLog = chalk.redBright.bold;
+const authSuccess = chalk.greenBright.bold;
+const authFailure = chalk.yellowBright.bold;
 
 const db = `mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.mongoCluster}/${config.mongoDatabase}?retryWrites=true&w=majority`;
 
@@ -56,7 +58,13 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  authenticate.verifyUser(req.body.username, req.body.password);
+  var isAuthenticated = authenticate.verifyUser(req.body.username, req.body.password);
+  console.log(isAuthenticated)
+  if (isAuthenticated === 1) {
+    log(authSuccess(`${name} User ${req.body.username} is authenticated successfully.`));
+  } else {
+    log(authFailure(`${name} User ${req.body.username} has not been authenticated.`));
+  }
   res.json();
   log(
     serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`)
@@ -67,5 +75,5 @@ app.listen(port, () => {
   log(serverLog(`${name} running on port ${port}.`));
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
