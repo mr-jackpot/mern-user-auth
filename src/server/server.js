@@ -51,15 +51,18 @@ app.use(
 
 app.use(express.json());
 
+app.listen(port, () => {
+  log(serverLog(`${name} running on port ${port}.`));
+});
+
+// **** API Requests **** //
 app.get("/", (req, res) => {
   res.send("Boom, you've hit the express server");
   log(serverLog(`${name} returned a response @ '/' status ${res.statusCode}`));
 });
 
 app.post("/auth", (req, res) => {
-
+  res.json();
+  log(greenLog(`${name} Data submitted from front end: ${req.body.username}, ${req.body.password}`))
 });
 
-app.listen(port, () => {
-  log(serverLog(`${name} running on port ${port}.`));
-});
