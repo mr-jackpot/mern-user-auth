@@ -4,8 +4,9 @@ const port = 4000;
 const authenticate = require("./auth");
 const config = require("./config.js");
 
+const session = require('express-session');
 const passport = require('passport');
-const User = require("../models/users");
+const userSchema = require("../models/users");
 const mongoose = require("mongoose");
 const chalk = require("chalk");
 const debug = require("debug");
@@ -29,7 +30,27 @@ mongoose
   )
   .catch((err) => log(serverLog(err)));
 
-app.use(function (req, res, next) {
+passport.use(authenticate.strategy);
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user.username);
+});
+
+passport.deserializeUser(async (email, done) => {
+  try {
+    let user = await userSchema.findOne(user);
+    if (!user) {
+      return done(new Error('user not found'));
+    }
+    done(null, user);
+  } catch (e) {
+    done(e);
+  }
+});
+
+app.use((req, res, next) => {
   // Authorizing API call to come from React front end on port 3000
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader(
@@ -44,6 +65,7 @@ app.use(function (req, res, next) {
 
   next();
 });
+
 app.use(
   express.urlencoded({
     extended: true,
@@ -58,16 +80,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  var isAuthenticated = authenticate.verifyUser(req.body.username, req.body.password);
-  if (isAuthenticated === 1) {
-    log(authSuccess(`${name} User ${req.body.username} is authenticated successfully.`));
-  } else {
-    log(authFailure(`${name} User ${req.body.username} has not been authenticated.`));
-  }
-  res.json();
-  log(
-    serverLog(`${name} returned a response @ '/auth' status ${res.statusCode}`)
-  );
+  app.post('/login',
+  passport.authenticate('local', { successRedirect: '/' }));
 });
 
 app.listen(port, () => {
