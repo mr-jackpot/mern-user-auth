@@ -1,7 +1,16 @@
 import {React, useState } from 'react'
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
+
+
 
 const Login = () => {
+
+    let history = useHistory();
+    
+    const handleRoute = () =>{ 
+        history.push("/session");
+      }
     
     // This can be one object
     const [username, setUsername] = useState("")
@@ -20,7 +29,7 @@ const Login = () => {
     const submitLogin = (auth) => {
         axios
             .post('http://localhost:4000/auth', auth)
-            .then((res) => console.log(res.status))
+            .then((res) => console.log(res.status));
     }
     
     return (
@@ -39,7 +48,7 @@ const Login = () => {
                     type="password"
                     required
                 /><br/>
-                <input type="submit" value="Submit"></input>
+                <input type="submit" value="Submit" onClick={handleRoute}/>
             </form>
         </div>
     )
