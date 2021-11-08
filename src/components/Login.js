@@ -14,14 +14,13 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(login);
         submitLogin(login);
     }
 
     const submitLogin = (auth) => {
         axios
             .post('http://localhost:4000/auth', auth)
-            .then((res) => console.log(res))
+            .then((res) => console.log(res.status))
     }
     
     return (
