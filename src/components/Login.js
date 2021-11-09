@@ -8,9 +8,9 @@ const Login = () => {
 
     let history = useHistory();
     
-    const handleRoute = () =>{ 
-        history.push("/session");
-      }
+    // const handleRoute = () =>{ 
+    //     history.push("/session");
+    //   }
     
     // This can be one object
     const [username, setUsername] = useState("")
@@ -29,7 +29,8 @@ const Login = () => {
     const submitLogin = (auth) => {
         axios
             .post('http://localhost:4000/auth', auth)
-            .then((res) => console.log(res.status));
+            .then(() => {
+                window.location.href="/session";})
     }
     
     return (
@@ -48,7 +49,9 @@ const Login = () => {
                     type="password"
                     required
                 /><br/>
-                <input type="submit" value="Submit" onClick={handleRoute}/>
+                <input type="submit" value="Submit" 
+                // onClick={handleRoute}
+                />
             </form>
         </div>
     )

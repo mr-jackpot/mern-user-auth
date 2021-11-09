@@ -71,7 +71,7 @@ passport.use(new LocalStrategy(
         if (err) { return done(err)}; 
         if (!user) { return done(null, false); }
         if (user.password !== password) {
-          console.log('[Password is incorrect]')
+          log(yellowLog(`[Password is incorrect]`))
           return done(null, false)
         }
         return done(null, user);
@@ -84,12 +84,15 @@ app.post('/auth',
   function(req, res) {
     // If this function gets called, authentication was successful.
     log(greenLog(`Authentication Successful`))
-    res.json();
-    // res.redirect('/session');
+    res.redirect('/session');
   })
   log(greenLog(`[Server.js] Line 72 firing`))
   ;
 
+app.get("/session",  (req, res) => {
+  log(greenLog('Welcome to the session page - user routed'))
+  res.json()
+})
 
 // **** API Requests **** //
 app.get("/", (req, res) => {
