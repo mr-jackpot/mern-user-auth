@@ -14,6 +14,9 @@ const serverLog = chalk.redBright.bold;
 const greenLog = chalk.greenBright.bold;
 const yellowLog = chalk.yellowBright.bold;
 
+// Passport
+const passport = require('passport-local')
+
 const db = `mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.mongoCluster}/${config.mongoDatabase}?retryWrites=true&w=majority`;
 
 mongoose
@@ -27,6 +30,7 @@ mongoose
   )
   .catch((err) => log(serverLog(err)));
 
+// **** middleware ****//
 app.use((req, res, next) => {
   // Authorizing API call to come from React front end on port 3000
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -39,21 +43,28 @@ app.use((req, res, next) => {
     "X-Requested-With,content-type"
   );
   res.setHeader("Access-Control-Allow-Credentials", true);
-
   next();
 });
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-
+app.use(express.urlencoded({extended: true,}));
 app.use(express.json());
+app.use(passport.initialize()); // initialize passport + sessions
+app.use(passport.session()); // initialize passport + sessions
 
 app.listen(port, () => {
   log(serverLog(`${name} running on port ${port}.`));
 });
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.verifyPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
 
 // **** API Requests **** //
 app.get("/", (req, res) => {
