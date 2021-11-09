@@ -65,17 +65,19 @@ app.listen(port, () => {log(serverLog(`${name} running on port ${port}.`));});
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    console.log("[Line 59 firing]")
-    return done(null, username)} //this line can be deleted
-    // userSchema.findOne({ username: username }, 
-    //   function (err, user) {
-    //     // if (err) { return done(err); }
-    //     // if (!user) { return done(null, false); }
-    //     // if (!user.verifyPassword(password)) { return done(null, false); }
-    //     return done(null, user);
-    //   }
-    // );
-  // }
+    userSchema.findOne({ username: username }, 
+      function (err, user) {
+        // Handle successful or unsuccesful log
+        if (err) { return done(err)}; 
+        if (!user) { return done(null, false); }
+        if (user.password !== password) {
+          console.log('[Password is incorrect]')
+          return done(null, false)
+        }
+        return done(null, user);
+      }
+    );
+  }
 ));
 app.post('/auth',
   passport.authenticate('local'),
