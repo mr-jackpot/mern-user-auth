@@ -15,10 +15,12 @@ const greenLog = chalk.greenBright.bold;
 const yellowLog = chalk.yellowBright.bold;
 
 // Passport
-const passport = require('passport-local')
+const session = require("express-session");
+const passport = require('passport')
+const LocalStrategy =  require('passport-local').Strategy
 
+//Database config
 const db = `mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.mongoCluster}/${config.mongoDatabase}?retryWrites=true&w=majority`;
-
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
@@ -43,28 +45,49 @@ app.use((req, res, next) => {
     "X-Requested-With,content-type"
   );
   res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+  next();});
 app.use(express.urlencoded({extended: true,}));
 app.use(express.json());
+app.use(session({secret: "secret"})); // Set up express-sessions
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
 
-app.listen(port, () => {
-  log(serverLog(`${name} running on port ${port}.`));
+//serialise users?
+passport.serializeUser(function(user, done) {
+  done(null, user);
 });
-app.use(passport.initialize());
-app.use(passport.session());
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+app.listen(port, () => {log(serverLog(`${name} running on port ${port}.`));});
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (!user.verifyPassword(password)) { return done(null, false); }
-      return done(null, user);
-    });
-  }
+    console.log("[Line 59 firing]")
+    return done(null, username)} //this line can be deleted
+    // userSchema.findOne({ username: username }, 
+    //   function (err, user) {
+    //     // if (err) { return done(err); }
+    //     // if (!user) { return done(null, false); }
+    //     // if (!user.verifyPassword(password)) { return done(null, false); }
+    //     return done(null, user);
+    //   }
+    // );
+  // }
 ));
+app.post('/auth',
+  passport.authenticate('local'),
+  function(req, res) {
+    // If this function gets called, authentication was successful.
+    log(greenLog(`Authentication Successful`))
+    res.json();
+    // res.redirect('/session');
+  })
+  log(greenLog(`[Server.js] Line 72 firing`))
+  ;
+
 
 // **** API Requests **** //
 app.get("/", (req, res) => {
@@ -72,8 +95,8 @@ app.get("/", (req, res) => {
   log(serverLog(`${name} returned a response @ '/' status ${res.statusCode}`));
 });
 
-app.post("/auth", (req, res) => {
-  res.json();
-  log(greenLog(`${name} Data submitted from front end: ${req.body.username}, ${req.body.password}`))
-});
+// app.post("/auth", (req, res) => {
+//   res.json();
+//   log(greenLog(`${name} Data submitted from front end: ${req.body.username}, ${req.body.password}`))
+// });
 
