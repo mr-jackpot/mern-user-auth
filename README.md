@@ -12,3 +12,5 @@ Objectives
 
 
 Project will be a login Page allowing admins to increment a counter and users to view the count.
+
+https://medium.com/@ethantcollins98/setting-and-using-cookies-with-a-node-js-express-server-49479673d043

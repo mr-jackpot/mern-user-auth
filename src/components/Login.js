@@ -30,7 +30,9 @@ const Login = () => {
         axios
             .post('http://localhost:4000/auth', auth)
             .then(() => {
-                window.location.href="/session";})
+                console.log('Routing to /session from React')
+                window.location.href="/session";
+            })
     }
     
     return (
