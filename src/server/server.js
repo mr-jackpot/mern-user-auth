@@ -25,7 +25,7 @@ mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
-      serverLog(
+      greenLog(
         `${name} Mongo connected @ ${config.mongoCluster}/${config.mongoDatabase}`
       )
     )
@@ -61,7 +61,7 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-app.listen(port, () => {log(serverLog(`${name} running on port ${port}.`));});
+app.listen(port, () => {log(greenLog(`${name} running on port ${port}.`));});
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -69,9 +69,11 @@ passport.use(new LocalStrategy(
       function (err, user) {
         // Handle successful or unsuccesful log
         if (err) { return done(err)}; 
-        if (!user) { return done(null, false); }
+        if (!user) { 
+          log(yellowLog(`${name} User '${username}' does not exist in the database. Login denied.`))
+          return done(null, false); }
         if (user.password !== password) {
-          log(yellowLog(`[Password is incorrect]`))
+          log(yellowLog(`${name} User '${username}' has entered an incorrect password. Login denied.`))
           return done(null, false)
         }
         return done(null, user);
@@ -83,21 +85,20 @@ app.post('/auth',
   passport.authenticate('local'),
   function(req, res) {
     // If this function gets called, authentication was successful.
-    log(greenLog(`Authentication Successful`))
+    log(greenLog(`${name} Authentication Successful for user ${req.body.username}`))
     res.redirect('/session');
   })
-  log(greenLog(`[Server.js] Line 72 firing`))
   ;
 
 app.get("/session",  (req, res) => {
-  log(greenLog('Welcome to the session page - user routed'))
+  log(greenLog(`${name} User routed to the session page.`))
   res.json()
 })
 
 // **** API Requests **** //
 app.get("/", (req, res) => {
   res.send("Boom, you've hit the express server");
-  log(serverLog(`${name} returned a response @ '/' status ${res.statusCode}`));
+  log(greenLog(`${name} returned a response @ '/' status ${res.statusCode}`));
 });
 
 // app.post("/auth", (req, res) => {
