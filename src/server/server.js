@@ -87,6 +87,8 @@ app.post('/auth',
     function(req, res) {
       // If this function gets called, authentication was successful.
       log(greenLog(`Authentication Successful`))
+      log(greenLog(req.user)) // user object from db!
+      log(greenLog(req.isAuthenticated())) // user object from db
       res.redirect('/session'); // lets get the redirect to change
     })
   log(greenLog(`[Server.js] Line 72 firing`))
@@ -94,13 +96,17 @@ app.post('/auth',
 
 app.get("/session",  (req, res) => {
   //lets hide this session unless there's a cookie
-  // if (!req.cookies.token) {
-  if (!req.cookies.secret) {
-    log(serverLog(`No cookie found`));
-    return res.status(401).send("401: Unathorised access attempt");} //.send(), this should parse for a cookie
-  log(greenLog(`${req.session.secret}`)) // does the secret exist
-  log(greenLog('Welcome to the session page - user routed'))
+  log(yellowLog('Are we authenticated here?')) // user object from db!
+  log(yellowLog(req.user)) // user object from db!
+  log(yellowLog(req.isAuthenticated())) // user object from db
 
+  // [troubleshooting] - we need to find where the cookie is stored, or is it passed into this.
+  // if (!req.cookies.token) {
+  if (req.cookies.connect) {
+    log(serverLog(`Cookie found`));
+    return res.status(401).send("401: Unathorised access attempt");} //.send(), this should parse for a cookie
+  
+  log(greenLog('Welcome to the session page - user routed'))
   res.json()
 })
 
