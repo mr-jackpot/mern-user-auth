@@ -29,9 +29,10 @@ const Login = () => {
     const submitLogin = (auth) => {
         axios
             .post('http://localhost:4000/auth', auth)
-            .then(() => {
+            .then((x) => {
+                console.log(x);
                 console.log('Routing to /session from React')
-                window.location.href="/session";
+                // window.location.href="/session"
             })
     }
     

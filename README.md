@@ -14,3 +14,13 @@ Objectives
 Project will be a login Page allowing admins to increment a counter and users to view the count.
 
 https://medium.com/@ethantcollins98/setting-and-using-cookies-with-a-node-js-express-server-49479673d043
+
+https://codeforgeek.com/manage-session-using-node-js-express-4/
+
+https://www.taniarascia.com/full-stack-cookies-localstorage-react-express/
+
+
+https://newbedev.com/how-do-sessions-work-in-express-js-with-node-js
+
+
+set-cookie could be the keyyyyy
