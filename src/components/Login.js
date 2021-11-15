@@ -6,8 +6,8 @@ import { useHistory } from "react-router-dom";
 
 const Login = () => {
 
-    let history = useHistory();
-    
+    // let history = useHistory(); 
+ 
     // const handleRoute = () =>{ 
     //     history.push("/session");
     //   }
@@ -35,7 +35,7 @@ const Login = () => {
                 // window.location.href="/session"
             })
     }
-    
+
     return (
         <div>
             <form onSubmit={handleSubmit}>

@@ -1,24 +1,28 @@
+//server setup
+
 const express = require("express");
 const app = express();
 const port = 4000;
+const http = require("http");
 
-const config = require("./config.js");
-const session = require("express-session");
+// DB setup
 const MongoStore = require('connect-mongo');
-
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser"); // bring in cookie parser
+const config = require("./config.js");
+
+//Quality of Life
 const chalk = require("chalk");
 const debug = require("debug");
 const log = debug("http:server");
-const http = require("http");
 const name = "[server.js]";
 const serverLog = chalk.redBright.bold;
 const greenLog = chalk.greenBright.bold;
 const yellowLog = chalk.yellowBright.bold;
 
-// Passport
+// Sessions set up
+const session = require("express-session");
+const cookieParser = require("cookie-parser"); // bring in cookie parser
 const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
@@ -34,11 +38,6 @@ mongoose
     )
   )
   .catch((err) => log(serverLog(err)));
-
-// const sessionStore = new MongoStore({
-//   mongooseConnection: connection, 
-//   collection: 'sessions'
-// });
 
 // **** middleware ****//
 app.use((req, res, next) => {
@@ -63,9 +62,11 @@ app.use(session({ //setup session middleware
   secret: "secret",
   resave: false,
   saveUninitialized: true,
-  // store: sessionStore, we'll want to set up sessionStore with connect-mongo for production
   cookie: {maxAge: 180000},
-})); // Set up express-sessions
+  passportAuth: false
+})); 
+
+// Set up express-sessions
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
 
@@ -83,7 +84,6 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     userSchema.findOne({ username: username }, 
       function (err, user) {
-        // Handle successful or unsuccesful log
         if (err) { return done(err)}; 
         if (!user) { return done(null, false); }
         if (user.password !== password) {
@@ -95,31 +95,41 @@ passport.use(new LocalStrategy(
     );
   }
 ));
+
 // this was a .post...
 app.post('/auth',
-  passport.authenticate('local'), // we're passing passport middleware here.
-    function(req, res) {
-      // If this function gets called, authentication was successful.
-      log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`))
-      // log(greenLog(req.user)) // user object from db!
-      // log(greenLog(req.session.cookie)) // user object from db!
-      // log(greenLog(req.isAuthenticated())) // user object from db
-      // res.json() // we can pass 
-      res.cookie().redirect('/protected');
-      // res.redirect('/protected'); // lets get the redirect to change
-    })
-  log(greenLog(`[Server.js] Line 72 firing`));
+  passport.authenticate('local'), // we're passing passport middleware here. 
+  function(req, res, done) {
+    console.log(req.session.passwordAuth)
+    req.session.passwordAuth = true
+    console.log(req.session.passwordAuth)
+    if (req.isAuthenticated()) {
+      res.send('<h1>You are authenticated</h1>');
+    } else {
+      res.send('<h1>You are not authenticated</h1>');
+    }    
+    // If this function gets called, authentication was successful.
+    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user
+    // res.redirect('/authtest');
+    // done();
+    },
+    );
+
+app.get("/authtest", passport.authenticate('local',
+  { successRedirect: '/success',
+  failureRedirect: '/failure' }));
 
 app.get("/", (req, res, next) => {
   //returns a sessions cookie but doesn't log network info...
-  if (req.session.viewCount) {
-    req.session.viewCount++;
-  } else {
-    req.session.viewCount = 1;
-  }
-  console.log(`Here's our cookie! ${req.session}, it's been used ${req.session.viewCount} times`)
-  res.status(200).send(`Here's a cookie - you have used it ${req.session.viewCount} times`)
-  next();
+  // if (req.session.viewCount) {
+  //   req.session.viewCount++;
+  // } else {
+  //   req.session.viewCount = 1;
+  // }
+  // console.log(`Here's our cookie! ${req.session}, it's been used ${req.session.viewCount} times`)
+  // res.status(200).send(`Here's a cookie - you have used it ${req.session.viewCount} times`)
+  console.log(req.isAuthenticated())
+  res.status(200).send('cookies work here');
 })
 
 // app.get("/session",  (req, res) => {
