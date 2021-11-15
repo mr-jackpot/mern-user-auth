@@ -28,7 +28,7 @@ const Login = () => {
 
     const submitLogin = (auth) => {
         axios
-            .post('http://localhost:4000/auth', auth)
+            .post('http://localhost:4000/auth', auth, {withCredentials: true})
             .then((x) => {
                 console.log(x);
                 console.log('Routing to /session from React')
@@ -36,8 +36,18 @@ const Login = () => {
             })
     }
 
+    const authTest = (auth) => {
+        axios
+            .get('http://localhost:4000/authtest', {withCredentials: true})
+            .then((x) => {
+                console.log(x);
+                console.log('were routed to authtest')
+            })
+    }
+    
     return (
         <div>
+            <button onClick={authTest}> Click me </button>
             <form onSubmit={handleSubmit}>
                 <label>Username:</label><br/>
                 <input

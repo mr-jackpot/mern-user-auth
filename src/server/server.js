@@ -1,12 +1,10 @@
 //server setup
-
 const express = require("express");
 const app = express();
 const port = 4000;
 const http = require("http");
 
 // DB setup
-const MongoStore = require('connect-mongo');
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
 const config = require("./config.js");
@@ -22,7 +20,7 @@ const yellowLog = chalk.yellowBright.bold;
 
 // Sessions set up
 const session = require("express-session");
-const cookieParser = require("cookie-parser"); // bring in cookie parser
+const cors = require('cors')
 const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
@@ -39,46 +37,37 @@ mongoose
   )
   .catch((err) => log(serverLog(err)));
 
-// **** middleware ****//
-app.use((req, res, next) => {
-  // Authorizing API call to come from React front end on port 3000
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+// // **** middleware ****//
+// app.use((req, res, next) => {
+//   // Authorizing API call to come from React front end on port 3000
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With,content-type"
+//   );
+//   res.setHeader("Access-Control-Allow-Credentials", true);
+//   next();
+// });
 
-app.use(cookieParser());
+// app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}))
 app.use(express.urlencoded({extended: true,}));
 app.use(express.json());
 app.use(session({ //setup session middleware
   secret: "secret",
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 180000},
-  passportAuth: false
+  cookie: {maxAge: 180000}
 })); 
-
-// Set up express-sessions
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
-
-//serialise users?
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -96,41 +85,61 @@ passport.use(new LocalStrategy(
   }
 ));
 
-// this was a .post...
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+// *** Routes ***//
 app.post('/auth',
-  passport.authenticate('local'), // we're passing passport middleware here. 
+  passport.authenticate('local'),
   function(req, res, done) {
-    console.log(req.session.passwordAuth)
-    req.session.passwordAuth = true
-    console.log(req.session.passwordAuth)
-    if (req.isAuthenticated()) {
-      res.send('<h1>You are authenticated</h1>');
-    } else {
-      res.send('<h1>You are not authenticated</h1>');
-    }    
     // If this function gets called, authentication was successful.
     log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user
+    log(greenLog(`Authentication Successful: ${req.user}`)) //req.user
+    // res.cookie(req.session.cookie)
+    console.log(req.session) 
+    res.send()
     // res.redirect('/authtest');
+    // // done();
+    // res.json()
     // done();
-    },
-    );
+    });
 
-app.get("/authtest", passport.authenticate('local',
-  { successRedirect: '/success',
-  failureRedirect: '/failure' }));
 
-app.get("/", (req, res, next) => {
-  //returns a sessions cookie but doesn't log network info...
-  // if (req.session.viewCount) {
-  //   req.session.viewCount++;
-  // } else {
-  //   req.session.viewCount = 1;
-  // }
-  // console.log(`Here's our cookie! ${req.session}, it's been used ${req.session.viewCount} times`)
-  // res.status(200).send(`Here's a cookie - you have used it ${req.session.viewCount} times`)
-  console.log(req.isAuthenticated())
-  res.status(200).send('cookies work here');
+app.get("/authtest", (req, res) => {
+  if (!req.isAuthenticated()) {
+    res.redirect('/failure')
+  } else {
+    res.redirect('/success')
+  }
+});
+
+app.get('/success', (req, res) => {
+  console.log("successful authorisation")
+  res.status(200).send("Succesful login")
 })
+
+app.get('/failure', (req, res) => {
+  console.log("failed authorisation")
+  res.status(200).send("Failed Login")
+})
+
+// app.get("/", (req, res, next) => {
+//   //returns a sessions cookie but doesn't log network info...
+//   // if (req.session.viewCount) {
+//   //   req.session.viewCount++;
+//   // } else {
+//   //   req.session.viewCount = 1;
+//   // }
+//   // console.log(`Here's our cookie! ${req.session}, it's been used ${req.session.viewCount} times`)
+//   // res.status(200).send(`Here's a cookie - you have used it ${req.session.viewCount} times`)
+//   console.log(req.isAuthenticated())
+//   res.status(200).send('cookies work here');
+// })
 
 // app.get("/session",  (req, res) => {
 //   //lets hide this session unless there's a cookie
