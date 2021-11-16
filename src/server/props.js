@@ -1,9 +1,9 @@
 module.exports = {
   // DB CONN DETAILS
-  mongoUser: "mongo_owner",
-  mongoPassword: "h9iXvyO5z84Mvtpa",
-  mongoCluster: "mongo-backend.swf3y.mongodb.net",
-  mongoDatabase: "auth_database",
+  DB_USER: "mongo_owner",
+  DB_PASSWORD: "h9iXvyO5z84Mvtpa",
+  DB_CLUSTER: "mongo-backend.swf3y.mongodb.net",
+  DB_DATABASE: "auth_database",
 
   // SERVER CONN DETAILS
   SERVER_PORT: 4000,

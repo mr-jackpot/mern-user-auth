@@ -25,13 +25,13 @@ const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
 //Database config
-const db = `mongodb+srv://${env.mongoUser}:${env.mongoPassword}@${env.mongoCluster}/${env.mongoDatabase}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
       greenLog(
-        `${name} Mongo connected @ ${env.mongoCluster}/${env.mongoDatabase}`
+        `${name} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
       )
     )
   )
