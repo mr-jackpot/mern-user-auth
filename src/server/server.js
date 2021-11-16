@@ -31,9 +31,7 @@ mongoose
   .then(() =>
     log(
       greenLog(
-        // `${name} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
         `${name} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
-
       )
     )
   )
