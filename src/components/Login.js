@@ -6,10 +6,8 @@ import "./Login.css"
 
 const Login = () => {
 
-
-
     let history = useHistory();
-    
+
     // const handleRoute = () =>{ 
     //     history.push("/session");
     //   }
@@ -31,14 +29,27 @@ const Login = () => {
 
     const submitLogin = (auth) => {
         axios
-            .post('http://localhost:4000/auth', auth)
-            .then(() => {
-                window.location.href="/session";},
-                (res) => setResponse('ERROR: User not authenticated.'))
+            .post('http://localhost:4000/auth', auth, {withCredentials: true})
+            .then((x) => {
+                console.log(x);
+                console.log('Routing to /session from React')
+                // window.location.href="/session"
+            })
+    }
+
+    const authTest = (auth) => {
+        axios
+            .get('http://localhost:4000/authtest', {withCredentials: true})
+            .then((x) => {
+                console.log(x);
+                console.log('were routed to authtest')
+            })
+
     }
     
     return (
         <div>
+            <button onClick={authTest}> Click me </button>
             <div className="FailureResponse">{response}</div>
             <form onSubmit={handleSubmit}>
                 <label>Username:</label><br/>
