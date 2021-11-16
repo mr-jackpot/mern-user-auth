@@ -37,22 +37,6 @@ mongoose
   )
   .catch((err) => log(serverLog(err)));
 
-// // **** middleware ****//
-// app.use((req, res, next) => {
-//   // Authorizing API call to come from React front end on port 3000
-  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With,content-type"
-//   );
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-//   next();
-// });
-
 app.use(cors({
   origin: 'http://localhost:3000', 
   credentials: true
@@ -97,13 +81,13 @@ app.post('/auth',
   passport.authenticate('local'),
   function(req, res, done) {
     // If this function gets called, authentication was successful.
-    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user
-    log(greenLog(`Authentication Successful: ${req.user}`)) //req.user
+    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user avialable here
     console.log(req.session) 
     res.send()
     });
 
 
+// tests if the session is authenticated
 app.get("/authtest", (req, res) => {
   if (!req.isAuthenticated()) {
     res.redirect('/failure')
