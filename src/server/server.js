@@ -30,7 +30,7 @@ mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
-      serverLog(
+      greenLog(
         `${name} Mongo connected @ ${config.mongoCluster}/${config.mongoDatabase}`
       )
     )
@@ -57,9 +57,11 @@ passport.use(new LocalStrategy(
     userSchema.findOne({ username: username }, 
       function (err, user) {
         if (err) { return done(err)}; 
-        if (!user) { return done(null, false); }
+        if (!user) { 
+          log(yellowLog(`${name} User '${username}' does not exist in the database. Login denied.`))
+          return done(null, false); }
         if (user.password !== password) {
-          log(yellowLog(`[Password is incorrect]`))
+          log(yellowLog(`${name} User '${username}' has entered an incorrect password. Login denied.`))
           return done(null, false)
         }
         return done(null, user);
@@ -81,8 +83,7 @@ app.post('/auth',
   passport.authenticate('local'),
   function(req, res, done) {
     // If this function gets called, authentication was successful.
-    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user avialable here
-    console.log(req.session) 
+    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user req.session avialable here
     res.send()
     });
 
