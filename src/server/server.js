@@ -53,7 +53,6 @@ mongoose
 //   next();
 // });
 
-// app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:3000', 
   credentials: true
@@ -100,13 +99,8 @@ app.post('/auth',
     // If this function gets called, authentication was successful.
     log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user
     log(greenLog(`Authentication Successful: ${req.user}`)) //req.user
-    // res.cookie(req.session.cookie)
     console.log(req.session) 
     res.send()
-    // res.redirect('/authtest');
-    // // done();
-    // res.json()
-    // done();
     });
 
 
@@ -128,58 +122,5 @@ app.get('/failure', (req, res) => {
   res.status(200).send("Failed Login")
 })
 
-// app.get("/", (req, res, next) => {
-//   //returns a sessions cookie but doesn't log network info...
-//   // if (req.session.viewCount) {
-//   //   req.session.viewCount++;
-//   // } else {
-//   //   req.session.viewCount = 1;
-//   // }
-//   // console.log(`Here's our cookie! ${req.session}, it's been used ${req.session.viewCount} times`)
-//   // res.status(200).send(`Here's a cookie - you have used it ${req.session.viewCount} times`)
-//   console.log(req.isAuthenticated())
-//   res.status(200).send('cookies work here');
-// })
-
-// app.get("/session",  (req, res) => {
-//   //lets hide this session unless there's a cookie
-//   log(yellowLog('Are we authenticated here?')) // user object from db!
-//   log(yellowLog(req.isAuthenticated())) // user object from db
-
-//   // [troubleshooting] - we need to find where the cookie is stored, or is it passed into this.
-//   // There is a cookie on server side, we need to set this cookie at the client end... 
-//   // if (!req.cookies.token) {
-//   // if (req.cookies['connect.sid']) {
-//   //   log(serverLog(`Cookie found`));
-//   //   res.status(401).send("401: Unathorised access attempt");} //.send(), this should parse for a cookie
-  
-//   log(greenLog('Welcome to the session page - user routed'))
-//   res.json()
-// })
-
-// **** API Requests **** //
-// app.get("/", (req, res) => {
-//   log(serverLog(`${name} returned a response @ '/' status ${res.statusCode}`));
-//   log(serverLog(`We're hitting '/' - the gateway to the server?`));
-//   log(serverLog(req.cookies['connect.sid'])); // logs session cookie id
-//   log(serverLog(req.cookies)); // logs session cookie id
-//   res.send("Boom, you've hit the express server");
-// });
-
-// app.get("/protected", (req, res, next) => {
-//   //returns a sessions cookie but doesn't log network info...
-//   res.send('Here\'s a cookie')
-
-// })
 
 app.listen(port, () => {log(serverLog(`${name} running on port ${port}.`));});
-
-
-// app.get("/*", function(req, res, next) {
-
-//   if(typeof req.cookies['connect.sid'] !== 'undefined') {
-//       console.log(r  eq.cookies['connect.sid']);
-//   }
-
-//   next(); // Call the next middleware
-// });
