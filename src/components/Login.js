@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import "./Login.css"
 
+const env = require("../server/props");
+
 
 const Login = () => {
 
@@ -29,7 +31,7 @@ const Login = () => {
 
     const submitLogin = (auth) => {
         axios
-            .post('http://localhost:4000/auth', auth, {withCredentials: true})
+            .post(`${env.SERVER_URL}${env.SERVER_PORT}/auth`, auth, {withCredentials: true})
             .then((x) => {
                 console.log(x);
                 console.log('Routing to /session from React')
@@ -39,7 +41,7 @@ const Login = () => {
 
     const authTest = (auth) => {
         axios
-            .get('http://localhost:4000/authtest', {withCredentials: true})
+            .get(`${env.SERVER_URL}${env.SERVER_PORT}/authtest`, {withCredentials: true})
             .then((x) => {
                 console.log(x);
                 console.log('were routed to authtest')

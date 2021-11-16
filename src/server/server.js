@@ -1,13 +1,13 @@
 //server setup
+const env = require("./props.js");
 const express = require("express");
 const app = express();
-const port = 4000;
+const port = env.SERVER_PORT;
 const http = require("http");
 
 // DB setup
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
-const config = require("./config.js");
 
 //Quality of Life
 const chalk = require("chalk");
@@ -25,20 +25,20 @@ const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
 //Database config
-const db = `mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.mongoCluster}/${config.mongoDatabase}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${env.mongoUser}:${env.mongoPassword}@${env.mongoCluster}/${env.mongoDatabase}?retryWrites=true&w=majority`;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
       greenLog(
-        `${name} Mongo connected @ ${config.mongoCluster}/${config.mongoDatabase}`
+        `${name} Mongo connected @ ${env.mongoCluster}/${env.mongoDatabase}`
       )
     )
   )
   .catch((err) => log(serverLog(err)));
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: `${env.REACT_URL}${env.REACT_PORT}`, // e.g. http://localhost:3000
   credentials: true
 }))
 app.use(express.urlencoded({extended: true,}));
