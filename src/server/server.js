@@ -18,6 +18,9 @@ const serverLog = chalk.redBright.bold;
 const greenLog = chalk.greenBright.bold;
 const yellowLog = chalk.yellowBright.bold;
 
+// Our Middleware 
+const isAuth = require('./isAuth')
+
 // Sessions set up
 const session = require("express-session");
 const cors = require('cors')
@@ -97,7 +100,7 @@ app.get("/authtest", (req, res) => {
   }
 });
 
-app.get('/success', (req, res) => {
+app.get('/success', isAuth(), (req, res) => {
   console.log("successful authorisation")
   res.status(200).send("Succesful login")
 })
