@@ -6,6 +6,7 @@ module.exports = {
 
   SERVER_PORT: 4000,
   SERVER_URL: "http://localhost:",
+  SERVER_NAME: "[server.js]",
 
   REACT_PORT: 3000,
   REACT_URL: "http://localhost:",
