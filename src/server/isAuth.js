@@ -1,6 +1,10 @@
 module.exports = function () {
     return function (req, res, next) {
-        console.log("middleware triggered")
-        next();
+        if (!req.isAuthenticated()) {
+            res.redirect('/failure')
+          } else {
+            console.log("Authentication Check: Passed")
+            next();
+          }
     }
 }
