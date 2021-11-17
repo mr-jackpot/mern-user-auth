@@ -9,4 +9,6 @@ module.exports = {
 
   REACT_PORT: 3000,
   REACT_URL: "http://localhost:",
+
+  SESSION_SECRET: require("crypto").randomBytes(16).toString('hex'),
 };
