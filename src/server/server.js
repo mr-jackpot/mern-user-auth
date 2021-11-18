@@ -8,7 +8,6 @@ const http = require("http");
 // DB setup
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
-const sessionStore = require('connect-mongodb-session')(session);
 
 //Quality of Life
 // CAN ALL BE REMOVED ONCE aLOGator fully implemented
@@ -24,6 +23,7 @@ const aLOGator = require('./tools/aLOGator').aLOGator;
 
 // Sessions set up
 const session = require("express-session");
+const sessionStore = require('connect-mongodb-session')(session);
 const cors = require('cors')
 const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
@@ -44,8 +44,8 @@ mongoose
 const store = new sessionStore({
   uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
   collection: 'mySessions'
-}, (err) => {
-  aLOGator('red', err);
+}, (error) => {
+  if (error) aLOGator('red', error);
 });
 
 store.on('error', (err) => {
