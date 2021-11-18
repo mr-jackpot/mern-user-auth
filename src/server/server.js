@@ -60,7 +60,7 @@ app.use(express.urlencoded({extended: true,}));
 app.use(express.json());
 app.use(session({ //setup session middleware
   secret: env.SESSION_SECRET,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
   cookie: {maxAge: 180000},
   store: store
