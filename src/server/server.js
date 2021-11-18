@@ -23,22 +23,34 @@ const aLOGator = require('./tools/aLOGator').aLOGator;
 
 // Sessions set up
 const session = require("express-session");
+const sessionStore = require('connect-mongodb-session')(session);
 const cors = require('cors')
 const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
 //Database config
-const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.DB_NAME}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.LOGIN_DB}?retryWrites=true&w=majority`;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
       greenLog(
-        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
+        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.LOGIN_DB}`
       )
     )
   )
   .catch((err) => log(serverLog(err)));
+
+const store = new sessionStore({
+  uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
+  collection: 'mySessions'
+}, (error) => {
+  if (error) aLOGator('red', error);
+});
+
+store.on('error', (err) => {
+  aLOGator('red', err);
+})
 
 app.use(cors({
   origin: `${env.REACT_URL}${env.REACT_PORT}`, // e.g. http://localhost:3000
@@ -50,7 +62,8 @@ app.use(session({ //setup session middleware
   secret: env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 180000}
+  cookie: {maxAge: 180000},
+  store: store
 })); 
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
