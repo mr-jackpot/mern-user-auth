@@ -10,16 +10,16 @@ const userSchema = require("../models/users");
 const mongoose = require("mongoose");
 
 //Quality of Life
+// CAN ALL BE REMOVED ONCE aLOGator fully implemented
 const chalk = require("chalk");
 const debug = require("debug");
 const log = debug("http:server");
-const name = "[server.js]";
 const serverLog = chalk.redBright.bold;
 const greenLog = chalk.greenBright.bold;
-const yellowLog = chalk.yellowBright.bold;
 
 // Our Middleware 
 const isAuth = require('./isAuth')
+const aLOGator = require('./tools/aLOGator').aLOGator;
 
 // Sessions set up
 const session = require("express-session");
@@ -34,7 +34,7 @@ mongoose
   .then(() =>
     log(
       greenLog(
-        `${name} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
+        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
       )
     )
   )
@@ -61,10 +61,10 @@ passport.use(new LocalStrategy(
       function (err, user) {
         if (err) { return done(err)}; 
         if (!user) { 
-          log(yellowLog(`${name} User '${username}' does not exist in the database. Login denied.`))
+          aLOGator('yellow', `${env.SERVER_NAME} User '${username}' does not exist in the database. Login denied.`)
           return done(null, false); }
         if (user.password !== password) {
-          log(yellowLog(`${name} User '${username}' has entered an incorrect password. Login denied.`))
+          aLOGator('yellow', `${env.SERVER_NAME} User '${username}' has entered an incorrect password. Login denied.`)
           return done(null, false)
         }
         return done(null, user);
@@ -86,21 +86,23 @@ app.post('/auth',
   passport.authenticate('local'),
   function(req, res, done) {
     // If this function gets called, authentication was successful.
-    log(greenLog(`Authentication Successful: ${req.isAuthenticated()}`)) //req.user req.session avialable here
+    aLOGator("green", `Authentication Successful: ${req.isAuthenticated()}`) //req.user req.session avialable here
     res.send()
     });
 
 // tests if the session is authenticated
 app.get("/authtest", isAuth(), (req, res) => {
-  console.log("successful authorisation")
+  aLOGator("green" , "Successful authorisation")
   res.status(200).send("Succesful login")
 });
 
-// unauthorised requests sent here by isAuth()
+// unauthorised requests sent here by
 app.get('/failure', (req, res) => {
-  console.log("failed authorisation")
+  aLOGator("red" , "Failed authorisation")
   res.status(200).send("Failed Login")
 })
 
 
-app.listen(port, () => {log(serverLog(`${name} running on port ${port}.`));});
+app.listen(env.SERVER_PORT, () => {
+  aLOGator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
+});
