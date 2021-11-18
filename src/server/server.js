@@ -8,6 +8,7 @@ const http = require("http");
 // DB setup
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
+const sessionStore = require('connect-mongodb-session')(session);
 
 //Quality of Life
 // CAN ALL BE REMOVED ONCE aLOGator fully implemented
@@ -28,17 +29,28 @@ const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
 //Database config
-const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.DB_NAME}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.LOGIN_DB}?retryWrites=true&w=majority`;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
     log(
       greenLog(
-        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
+        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.LOGIN_DB}`
       )
     )
   )
   .catch((err) => log(serverLog(err)));
+
+const store = new sessionStore({
+  uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
+  collection: 'mySessions'
+}, (err) => {
+  aLOGator('red', err);
+});
+
+store.on('error', (err) => {
+  aLOGator('red', err);
+})
 
 app.use(cors({
   origin: `${env.REACT_URL}${env.REACT_PORT}`, // e.g. http://localhost:3000
@@ -48,9 +60,10 @@ app.use(express.urlencoded({extended: true,}));
 app.use(express.json());
 app.use(session({ //setup session middleware
   secret: env.SESSION_SECRET,
-  resave: false,
+  resave: true,
   saveUninitialized: true,
-  cookie: {maxAge: 180000}
+  cookie: {maxAge: 180000},
+  store: store
 })); 
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
