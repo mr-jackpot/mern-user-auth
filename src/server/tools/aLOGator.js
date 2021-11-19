@@ -1,6 +1,4 @@
 const chalk = require("chalk");
-const debug = require("debug");
-const log = debug("http:server");
 
 //Define Colours of logs
 const redLog = chalk.redBright.bold;

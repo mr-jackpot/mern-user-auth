@@ -2,20 +2,10 @@
 const env = require("./props.js");
 const express = require("express");
 const app = express();
-const port = env.SERVER_PORT;
-const http = require("http");
 
 // DB setup
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
-
-//Quality of Life
-// CAN ALL BE REMOVED ONCE aLOGator fully implemented
-const chalk = require("chalk");
-const debug = require("debug");
-const log = debug("http:server");
-const serverLog = chalk.redBright.bold;
-const greenLog = chalk.greenBright.bold;
 
 // Our Middleware 
 const isAuth = require('./isAuth')
@@ -33,19 +23,17 @@ const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
-    log(
-      greenLog(
+    aLOGator('green',
         `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.LOGIN_DB}`
-      )
     )
   )
-  .catch((err) => log(serverLog(err)));
+  .catch((err) => aLOGator('red', err));
 
 const store = new sessionStore({
   uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
   collection: 'mySessions'
-}, (error) => {
-  if (error) aLOGator('red', error);
+}, (err) => {
+  if (err) aLOGator('red', err);
 });
 
 store.on('error', (err) => {
