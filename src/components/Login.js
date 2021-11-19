@@ -39,9 +39,19 @@ const Login = () => {
             })
     }
 
-    const authTest = (auth) => {
+    const userTest = (auth) => {
         axios
             .get(`${env.SERVER_URL}${env.SERVER_PORT}/authtest`, {withCredentials: true})
+            .then((x) => {
+                console.log(x);
+                console.log('were routed to authtest')
+            })
+
+    }
+
+    const adminTest = (auth) => {
+        axios
+            .get(`${env.SERVER_URL}${env.SERVER_PORT}/admin`, {withCredentials: true})
             .then((x) => {
                 console.log(x);
                 console.log('were routed to authtest')
@@ -51,7 +61,8 @@ const Login = () => {
     
     return (
         <div>
-            <button onClick={authTest}> Click me </button>
+            <button onClick={adminTest}> OWNER TEST </button>
+            <button onClick={userTest}> VIEWER TEST </button>
             <div className="FailureResponse">{response}</div>
             <form onSubmit={handleSubmit}>
                 <label>Username:</label><br/>

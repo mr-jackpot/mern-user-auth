@@ -2,20 +2,10 @@
 const env = require("./props.js");
 const express = require("express");
 const app = express();
-const port = env.SERVER_PORT;
-const http = require("http");
 
 // DB setup
 const userSchema = require("../models/users");
 const mongoose = require("mongoose");
-
-//Quality of Life
-// CAN ALL BE REMOVED ONCE aLOGator fully implemented
-const chalk = require("chalk");
-const debug = require("debug");
-const log = debug("http:server");
-const serverLog = chalk.redBright.bold;
-const greenLog = chalk.greenBright.bold;
 
 // Our Middleware 
 const isAuth = require('./isAuth')
@@ -23,22 +13,32 @@ const alogator = require('./tools/aLOGator').default;
 
 // Sessions set up
 const session = require("express-session");
+const sessionStore = require('connect-mongodb-session')(session);
 const cors = require('cors')
 const passport = require('passport')
 const LocalStrategy =  require('passport-local').Strategy;
 
 //Database config
-const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.DB_NAME}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.LOGIN_DB}?retryWrites=true&w=majority`;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
-    log(
-      greenLog(
-        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.DB_NAME}`
-      )
+    aLOGator('green',
+        `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.LOGIN_DB}`
     )
   )
-  .catch((err) => log(serverLog(err)));
+  .catch((err) => aLOGator('red', err));
+
+const store = new sessionStore({
+  uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
+  collection: 'mySessions'
+}, (err) => {
+  if (err) aLOGator('red', err);
+});
+
+store.on('error', (err) => {
+  aLOGator('red', err);
+})
 
 app.use(cors({
   origin: `${env.REACT_URL}${env.REACT_PORT}`, // e.g. http://localhost:3000
@@ -50,7 +50,8 @@ app.use(session({ //setup session middleware
   secret: env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 180000}
+  cookie: {maxAge: 180000},
+  store: store
 })); 
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
@@ -94,6 +95,15 @@ app.post('/auth',
 app.get("/authtest", isAuth(), (req, res) => {
   alogator("green" , "Successful authorisation")
   res.status(200).send("Succesful login")
+});
+
+app.get("/admin", isAuth(), (req, res) => {
+  if (req.user.accessLevel === 'owner') {
+    aLOGator("green" , "Administrator authorized");
+    res.status(200).send("Administrator authorized")
+  } else {
+    res.redirect('/failure')
+  }
 });
 
 // unauthorised requests sent here by

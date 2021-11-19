@@ -1,11 +1,10 @@
-module.exports = function () {
-    const alogator = require('./tools/aLOGator').default;
+
+module.exports = function() {
 
     return function (req, res, next) {
         if (!req.isAuthenticated()) {
             res.redirect('/failure')
           } else {
-            alogator("green", "Authentication Check: Passed")
             next();
           }
     }

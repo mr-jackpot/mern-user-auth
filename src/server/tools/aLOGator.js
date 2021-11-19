@@ -1,4 +1,5 @@
 "use strict";
+
 // We could use typescript here to make sure the params are strings
 exports.__esModule = true;
 function default_1(colour, log) {
