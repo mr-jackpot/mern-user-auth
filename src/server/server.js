@@ -97,6 +97,15 @@ app.get("/authtest", isAuth(), (req, res) => {
   res.status(200).send("Succesful login")
 });
 
+app.get("/admin", isAuth(), (req, res) => {
+  if (req.user.accessLevel === 'owner') {
+    aLOGator("green" , "Administrator authorized");
+    res.status(200).send("Administrator authorized")
+  } else {
+    res.redirect('/failure')
+  }
+});
+
 // unauthorised requests sent here by
 app.get('/failure', (req, res) => {
   aLOGator("red" , "Failed authorisation")
