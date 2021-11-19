@@ -102,7 +102,10 @@ app.get('/failure', (req, res) => {
   res.status(200).send("Failed Login")
 })
 
+const test = require('./tools/testy')
 
 app.listen(env.SERVER_PORT, () => {
   aLOGator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
+  var x = test.testy
+  console.log(x)
 });
