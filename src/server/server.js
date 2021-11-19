@@ -19,7 +19,7 @@ const greenLog = chalk.greenBright.bold;
 
 // Our Middleware 
 const isAuth = require('./isAuth')
-const aLOGator = require('./tools/aLOGator').aLOGator;
+const alogator = require('./tools/aLOGator').default;
 
 // Sessions set up
 const session = require("express-session");
@@ -61,10 +61,10 @@ passport.use(new LocalStrategy(
       function (err, user) {
         if (err) { return done(err)}; 
         if (!user) { 
-          aLOGator('yellow', `${env.SERVER_NAME} User '${username}' does not exist in the database. Login denied.`)
+          alogator('yellow', `${env.SERVER_NAME} User '${username}' does not exist in the database. Login denied.`)
           return done(null, false); }
         if (user.password !== password) {
-          aLOGator('yellow', `${env.SERVER_NAME} User '${username}' has entered an incorrect password. Login denied.`)
+          alogator('yellow', `${env.SERVER_NAME} User '${username}' has entered an incorrect password. Login denied.`)
           return done(null, false)
         }
         return done(null, user);
@@ -86,26 +86,22 @@ app.post('/auth',
   passport.authenticate('local'),
   function(req, res, done) {
     // If this function gets called, authentication was successful.
-    aLOGator("green", `Authentication Successful: ${req.isAuthenticated()}`) //req.user req.session avialable here
+    alogator("green", `Authentication Successful: ${req.isAuthenticated()}`) //req.user req.session avialable here
     res.send()
     });
 
 // tests if the session is authenticated
 app.get("/authtest", isAuth(), (req, res) => {
-  aLOGator("green" , "Successful authorisation")
+  alogator("green" , "Successful authorisation")
   res.status(200).send("Succesful login")
 });
 
 // unauthorised requests sent here by
 app.get('/failure', (req, res) => {
-  aLOGator("red" , "Failed authorisation")
+  alogator("red" , "Failed authorisation")
   res.status(200).send("Failed Login")
 })
 
-const test = require('./tools/testy')
-
 app.listen(env.SERVER_PORT, () => {
-  aLOGator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
-  var x = test.testy
-  console.log(x)
+  alogator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
 });

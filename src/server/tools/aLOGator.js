@@ -1,27 +1,25 @@
-const chalk = require("chalk");
-const debug = require("debug");
-const log = debug("http:server");
-
-//Define Colours of logs
-const redLog = chalk.redBright.bold;
-const greenLog = chalk.greenBright.bold;
-const yellowLog = chalk.yellowBright.bold;
-
+"use strict";
 // We could use typescript here to make sure the params are strings
-const aLOGator = (colour, log) => {
-    switch(colour){
+exports.__esModule = true;
+function default_1(colour, log) {
+    var chalk = require("chalk");
+    //Define Colours of logs
+    var redLog = chalk.redBright.bold;
+    var greenLog = chalk.greenBright.bold;
+    var yellowLog = chalk.yellowBright.bold;
+    switch (colour) {
         case "red":
-            console.log(redLog(log))
+            console.log(redLog(log));
             break;
         case "yellow":
-            console.log(yellowLog(log))
+            console.log(yellowLog(log));
             break;
         case "green":
-            console.log(greenLog(log))
+            console.log(greenLog(log));
             break;
         default:
-            console.log(log)
+            console.log(log);
     }
-  };
-  
-exports.aLOGator = aLOGator;
+}
+exports["default"] = default_1;
+;
