@@ -1,7 +1,7 @@
 # mern-user-auth
 
 Objectives
- - [ ] Multiple logins with different privileges (access groups)
+ - [x] Multiple logins with different privileges (access groups)
 	- [ x ]Configure sessions
 	- [ x ]Decide on either Auth0 or Passport 
 	- [ x ]Different privileges on each account
