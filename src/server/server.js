@@ -23,21 +23,21 @@ const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() =>
-    aLOGator('green',
+    alogator('green',
         `${env.SERVER_NAME} Mongo connected @ ${env.DB_CLUSTER}/${env.LOGIN_DB}`
     )
   )
-  .catch((err) => aLOGator('red', err));
+  .catch((err) => alogator('red', err));
 
 const store = new sessionStore({
   uri: `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.SESSION_DB}?retryWrites=true&w=majority`,
   collection: 'mySessions'
 }, (err) => {
-  if (err) aLOGator('red', err);
+  if (err) alogator('red', err);
 });
 
 store.on('error', (err) => {
-  aLOGator('red', err);
+  alogator('red', err);
 })
 
 app.use(cors({
