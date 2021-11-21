@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+const env = require('../../../src/server/props')
 
 // Welcome to Cypress!
 //
@@ -11,21 +12,22 @@
 // please read our getting started guide:
 // https://on.cypress.io/introduction-to-cypress
 
-describe('example to-do app', () => {
+describe('MERN-USER-AUTH', () => {
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
     // so we must tell it to visit our website with the `cy.visit()` command.
     // Since we want to visit the same URL at the start of all our tests,
     // we include it in our beforeEach function so that it runs before each test
-    cy.visit('https://example.cypress.io/todo')
+    cy.visit(`${env.REACT_URL}${env.REACT_PORT}`)
   })
 
-  it('displays two todo items by default', () => {
+  it('displays a logo', () => {
     // We use the `cy.get()` command to get all elements that match the selector.
     // Then, we use `should` to assert that there are two matched items,
     // which are the two default items.
-    cy.get('.todo-list li').should('have.length', 2)
-
+    cy.get('.app-logo').should('exist')
+    cy.log('This logs to the terminal')
+    
     // We can go even further and check that the default todos each contain
     // the correct text. We use the `first` and `last` functions
     // to get just the first and last matched elements individually,

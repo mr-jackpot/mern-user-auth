@@ -99,7 +99,7 @@ app.get("/authtest", isAuth(), (req, res) => {
 
 app.get("/admin", isAuth(), (req, res) => {
   if (req.user.accessLevel === 'owner') {
-    aLOGator("green" , "Administrator authorized");
+    alogator("green" , "Administrator authorized");
     res.status(200).send("Administrator authorized")
   } else {
     res.redirect('/failure')
