@@ -69,6 +69,7 @@ const Login = () => {
                 <input
                     value={username}
                     onChange={(u) => setUsername(u.target.value)}
+                    name="username" // added so cypress can find the inputbox
                     required
                 /><br/>
                 <label>Password:</label><br/>
