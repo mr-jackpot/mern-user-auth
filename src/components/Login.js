@@ -1,21 +1,13 @@
 import React from 'react'
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
 import "./Login.css"
 
 const env = require("../server/props");
 
 
 const Login = () => {
-
-    let history = useHistory();
-
-    // const handleRoute = () =>{ 
-    //     history.push("/session");
-    //   }
     
     // This can be one object
-    const [response, setResponse] = React.useState("");
     const [username, setUsername] = React.useState("")
     const [password, setPassword] = React.useState("")
 
@@ -35,7 +27,6 @@ const Login = () => {
             .then((x) => {
                 console.log(x);
                 console.log('Routing to /session from React')
-                // window.location.href="/session"
             })
     }
 
@@ -59,11 +50,19 @@ const Login = () => {
 
     }
     
+    const logout = (auth) => {
+        axios
+            .get(`${env.SERVER_URL}${env.SERVER_PORT}/logout`, {withCredentials: true})
+            .then((x) => {
+                console.log(x);
+            })
+        window.location.reload();
+    }
+
     return (
         <div>
             <button onClick={adminTest}> OWNER TEST </button>
             <button onClick={userTest}> VIEWER TEST </button>
-            <div className="FailureResponse">{response}</div>
             <form onSubmit={handleSubmit}>
                 <label>Username:</label><br/>
                 <input
@@ -80,9 +79,11 @@ const Login = () => {
                     required
                 /><br/>
                 <input type="submit" value="Submit" 
+                
                 // onClick={handleRoute}
                 />
-            </form>
+            </form> 
+            <button onClick={logout}> DESTROY COOKIE </button>
         </div>
     )
 }
