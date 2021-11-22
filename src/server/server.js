@@ -1,5 +1,5 @@
 //server setup
-const env = require("./props.js");
+const env = require("./props");
 const express = require("express");
 const app = express();
 
@@ -7,7 +7,6 @@ const app = express();
 const mongoose = require("mongoose");
 
 // Our Middleware 
-const isAuth = require('./isAuth')
 const alogator = require('./tools/aLOGator').default;
 
 // Sessions set up
@@ -15,7 +14,7 @@ const session = require("express-session");
 const sessionStore = require('connect-mongodb-session')(session);
 const cors = require('cors')
 const passport = require('passport')
-const localStrategy = require('./passport');
+const router = require("./router.js");
 
 //Database config
 const db = `mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_CLUSTER}/${env.LOGIN_DB}?retryWrites=true&w=majority`;
@@ -54,51 +53,11 @@ app.use(session({ //setup session middleware
 })); 
 app.use(passport.initialize()); // initialize passport + sessions
 app.use(passport.session()); // initialize passport + sessions
-passport.use(localStrategy);
-
-// *** Routes ***//
-app.post('/auth',
-  passport.authenticate('local'),
-  function(req, res, done) {
-    // If this function gets called, authentication was successful.
-    alogator("green", `Authentication Successful: ${req.isAuthenticated()}`) //req.user req.session avialable here
-    res.send()
-    });
-
-// tests if the session is authenticated
-app.get("/authtest", isAuth(), (req, res) => {
-  alogator("green" , "Successful authorisation")
-  res.status(200).send("Succesful login")
-});
-
-app.get("/admin", isAuth(), (req, res) => {
-  if (req.user.accessLevel === 'owner') {
-    alogator("green" , "Administrator authorized");
-    res.status(200).send("Administrator authorized")
-  } else {
-    res.redirect('/failure')
-  }
-});
-
-// unauthorised requests sent here by
-app.get('/failure', (req, res) => {
-  alogator("red" , "Failed authorisation")
-  res.status(200).send("Failed Login")
-})
-
-app.get('/logout', (req, res) => {
-  if (req.user.username) {
-    var user = req.user.username;
-    req.session.destroy();
-    alogator('yellow', `User '${user}' signed out (Cookie has been crumbled)`)
-  } else {
-      alogator('yellow', 'Client has no active session to disconnect.')
-  }
-  
-})
-
 
 app.listen(env.SERVER_PORT, () => {
   alogator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
 });
+
+app.use('/', router)
+
 
