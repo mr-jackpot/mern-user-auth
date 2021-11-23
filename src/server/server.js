@@ -86,6 +86,19 @@ app.get('/failure', (req, res) => {
   res.status(200).send("Failed Login")
 })
 
+app.get('/logout', (req, res) => {
+  if (req.user.username) {
+    var user = req.user.username;
+    req.session.destroy();
+    alogator('yellow', `User '${user}' signed out (Cookie has been crumbled)`)
+  } else {
+      alogator('yellow', 'Client has no active session to disconnect.')
+  }
+  
+})
+
+
 app.listen(env.SERVER_PORT, () => {
   alogator("green", `${env.SERVER_NAME} running on port ${env.SERVER_PORT}.`)
 });
+
