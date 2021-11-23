@@ -78,10 +78,7 @@ const Login = () => {
                     type="password"
                     required
                 /><br/>
-                <input type="submit" value="Submit" 
-                
-                // onClick={handleRoute}
-                />
+                <input type="submit" value="Submit"/>
             </form> 
             <button onClick={logout}> DESTROY COOKIE </button>
         </div>
