@@ -3,7 +3,7 @@ const alogator = require("./tools/aLOGator").default;
 const isAdmin = (req, res) => {
   if (req.user.accessLevel === "owner") {
     alogator("green", "Administrator authorized");
-    res.status(200).send("Administrator authorized");
+    res.send("Administrator authorized").status(200);
   } else {
     res.redirect("/failure");
   }
@@ -11,12 +11,12 @@ const isAdmin = (req, res) => {
 
 const failureResponse = (req, res) => {
   alogator("red", "Failed authorisation");
-  res.status(200).send("Failed Login");
+  res.send("Failed Login").status(200);
 };
 
 const successResponse = (req, res) => {
   alogator("green", "Successful authorisation");
-  res.status(200).send("Succesful login");
+  res.send("Succesful login").status(200);
 };
 
 const destroySession = (req, res) => {
