@@ -11,18 +11,24 @@ describe("tests authenication", () => {
       })
     });
 
-    it("tests authentication fails"), () => {
-      cy.request('POST', `${env.SERVER_URL}${env.SERVER_PORT}/auth`, {'username': 'wrong', 'password': 'login'})
-      .then((response) => {
-        expect(response.body).to.have.property('code', 401);
-      })
-    }
-
-    it("tests authentication successful"), () => {
-        cy.request('POST', `${env.SERVER_URL}${env.SERVER_PORT}/auth`, {'username': 'Admin1', 'password': 'Admin1'})
-        .then((response) => {
-          expect(response.body).to.have.property('code', 200);
+    it("tests authentication fails", () => {
+      cy.request({
+        method: 'POST', 
+        url: `${env.SERVER_URL}${env.SERVER_PORT}/auth`,
+        failOnStatusCode: false,
+        auth:{'username': 'wrong', 'password': 'login'},
         })
-      }
+      .then((res) => {
+        expect(res.status).to.eq(400);
+      })
+    });
+
+    it("tests authentication successful", () => {
+        cy.request('POST', `${env.SERVER_URL}${env.SERVER_PORT}/auth`, {'username': 'admin1', 'password': 'admin1'})
+        .then((res) => {
+          expect(res.status).to.eq(200);
+
+        })
+      });
 })
 
