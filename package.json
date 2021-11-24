@@ -33,7 +33,7 @@
   "scripts": {
     "start": "concurrently \"DEBUG=http:server nodemon ./src/server/server.js -q\" \"react-scripts start\"",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "npx cypress run --spec 'cypress/integration/homepageTests/*.spec.js'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
