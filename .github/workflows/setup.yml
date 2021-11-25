@@ -6,7 +6,6 @@ name: CI
 
 on: push
 
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -26,5 +25,7 @@ jobs:
           
       - name: Install our dependencies
         run: npm ci # Faster than npm install, does the same thing
-             npm start
-             npm test
+      - name: start server
+        run: npm start
+      - name: start tests
+        run: npm test
