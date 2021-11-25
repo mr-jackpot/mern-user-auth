@@ -26,5 +26,5 @@ jobs:
           
       - name: Install our dependencies
         run: npm ci # Faster than npm install, does the same thing
-        run: npm start
-        run: npm test
+             npm start
+             npm test
