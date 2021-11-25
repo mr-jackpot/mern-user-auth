@@ -26,7 +26,8 @@ jobs:
       - name: Install our dependencies
         run: npm ci # Faster than npm install, does the same thing
       - name: start server
-        run: npm start
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+        run: |
+          npm start &
+          sleep 30
+          npm test
 
