@@ -6,8 +6,10 @@ describe("tests authenication", () => {
     it("is a simple get request", () => {
       cy.request('http://localhost:4000/authtest')
       .then((res) => {
-        expect(res.status).to.eq(200);
-        expect(res.body).contains('Failed Login');
+        // expect(res.status).to.eq(200);
+        // expect(res.body).contains('Failed Login');
+        expect(res.body).contains('Plz fail this test');
+
       })
     });
 
