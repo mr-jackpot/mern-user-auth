@@ -4,6 +4,10 @@ name: CI
 
 # Controls when the workflow will run
 
+# Uncomment me to run tests on every push
+# on: [push]
+
+# Uncomment me to run tests only on merge to straight to main or PR to main
 on:
   # Trigger the workflow on push or pull request,
   # but only for the main branch
