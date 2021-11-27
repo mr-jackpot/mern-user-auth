@@ -5,12 +5,12 @@ module.exports = {
   LOGIN_DB: "auth_database",
   SESSION_DB: "session_store",
 
-  SERVER_PORT: 4000,
-  SERVER_URL: "https://fircohard-open-source.nw.r.appspot.com",
+  SERVER_PORT: 8080,
+  SERVER_URL: "https://fircohard-open-source.nw.r.appspot.com:",
   SERVER_NAME: "[server.js]",
 
-  REACT_PORT: 3000,
-  REACT_URL: "https://fircohard-open-source.nw.r.appspot.com",
+  REACT_PORT: 8080,
+  REACT_URL: "https://fircohard-open-source.nw.r.appspot.com:",
 
   SESSION_SECRET: require("crypto").randomBytes(16).toString('hex'),
 };
