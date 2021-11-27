@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 import "./Login.css"
+import { useHistory } from "react-router-dom";
+
 
 const env = require("../server/props");
 
@@ -16,6 +18,9 @@ const Login = () => {
         "password": password 
     }
 
+    const history = useHistory();
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         submitLogin(login);
@@ -26,11 +31,12 @@ const Login = () => {
             .post(`${env.SERVER_URL}${env.SERVER_PORT}/auth`, auth, {withCredentials: true})
             .then((x) => {
                 console.log(x);
-                console.log('Routing to /session from React')
+                console.log('Routing to /session from React');
+                history.push('/session');
             })
     }
 
-    const userTest = (auth) => {
+    const userTest = () => {
         axios
             .get(`${env.SERVER_URL}${env.SERVER_PORT}/authtest`, {withCredentials: true})
             .then((x) => {
@@ -40,7 +46,7 @@ const Login = () => {
 
     }
 
-    const adminTest = (auth) => {
+    const adminTest = () => {
         axios
             .get(`${env.SERVER_URL}${env.SERVER_PORT}/admin`, {withCredentials: true})
             .then((x) => {
@@ -50,7 +56,7 @@ const Login = () => {
 
     }
     
-    const logout = (auth) => {
+    const logout = () => {
         axios
             .get(`${env.SERVER_URL}${env.SERVER_PORT}/logout`, {withCredentials: true})
             .then((x) => {

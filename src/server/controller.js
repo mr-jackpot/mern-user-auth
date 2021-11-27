@@ -4,6 +4,7 @@ const isAdmin = (req, res) => {
   if (req.user.accessLevel === "owner") {
     alogator("green", "Administrator authorized");
     res.send("Administrator authorized").status(200);
+    res.redirect("/session")
   } else {
     res.redirect("/failure");
   }
