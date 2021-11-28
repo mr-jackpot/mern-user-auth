@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
-const env = require('../../../src/server/props')
+
+const env = require("../../../src/server/props");
+
 
 describe("tests authenication", () => {
 
