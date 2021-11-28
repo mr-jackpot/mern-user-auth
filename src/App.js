@@ -23,7 +23,9 @@ function App() {
           </div>
         </Route>
         <Route path="/session">
+          <div className='App-header'>
           <LoginRedirect />
+          </div>
         </Route>
       </Switch>
     </BrowserRouter>
