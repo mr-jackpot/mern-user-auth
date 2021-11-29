@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import "./Login.css";
 import { useHistory } from "react-router-dom";
-import { wait, waitFor } from "@testing-library/dom";
 
 const env = require("../server/props");
 

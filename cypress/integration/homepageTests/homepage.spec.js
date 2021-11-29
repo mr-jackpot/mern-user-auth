@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
-const env = require('../../../src/server/props')
+const env = require("../../../src/server/props");
+
 
 describe('MERN-USER-AUTH HomePage', () => {
     beforeEach(() => {
