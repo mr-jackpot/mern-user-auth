@@ -27,7 +27,6 @@ describe("tests authenication", () => {
         cy.request('POST', `${env.SERVER_URL}${env.SERVER_PORT}/auth`, {'username': 'admin1', 'password': 'admin1'})
         .then((res) => {
           expect(res.status).to.eq(200);
-
         })
       });
 })
